@@ -1,0 +1,19 @@
+.venv/
+.idea/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+!.env.example
+data/
+uploads/
+instance/
+.DS_Store
+*.log
+# Deployment inventory and evidence contain internal infrastructure details.
+docs/development.md
+docs/source-inventory.md
+docs/evidence/

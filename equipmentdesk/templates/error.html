@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Lỗi {{ status }} · EquipmentDesk{% endblock %}
+{% block content %}
+<section>
+  <h1>Không thể hoàn tất yêu cầu</h1>
+  <p class="notice error" role="alert">{{ message }}</p>
+  <p>Mã lỗi: {{ status }}</p>
+  <a href="{{ url_for('main.index') }}">Về trang chính</a>
+  <a href="{{ url_for('auth.login') }}">Đến trang đăng nhập</a>
+</section>
+{% endblock %}

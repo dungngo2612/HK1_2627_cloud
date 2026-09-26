@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Sửa' if item else 'Thêm' }} thiết bị · EquipmentDesk{% endblock %}
+{% block content %}
+<a href="{{ url_for('equipment.index') }}">← Danh sách thiết bị</a>
+<h1>{{ 'Sửa' if item else 'Thêm' }} thiết bị</h1>
+<p>Mỗi mã đại diện cho một thiết bị vật lý. Các trường có dấu * là bắt buộc.</p>
+{% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+{% for message in errors.get('_form', []) %}<p class="notice error" role="alert">{{ message }}</p>{% endfor %}
+<section>
+<form method="post">
+  {{ form.hidden_tag() }}
+  {% for field, limit in ((form.code, 80), (form.name, 200), (form.category, 100), (form.location, 200), (form.description, 10000)) %}
+    <div class="field">
+      <label for="{{ field.id }}">{{ field.label.text }}{% if field.name in ['code', 'name', 'category'] %} *{% endif %}</label>
+      {{ field(maxlength=limit, required=(field.name in ['code', 'name', 'category']), aria_describedby=field.id ~ '-errors') }}
+      <div id="{{ field.id }}-errors">{% for message in errors.get(field.name, []) %}<p class="field-error" role="alert">{{ message }}</p>{% endfor %}</div>
+    </div>
+  {% endfor %}
+  <div class="field">
+    {% if item and item.status == 'BORROWED' %}
+      <p><strong>Trạng thái: Đang mượn</strong></p>
+      <p>Trạng thái được giữ nguyên. Để nhận trả, mở phiếu tương ứng trong <a href="{{ url_for('loans.index') }}">danh sách phiếu mượn</a>.</p>
+    {% else %}
+      {{ form.status.label }}{{ form.status(aria_describedby='status-errors') }}
+    {% endif %}
+    <div id="status-errors">{% for message in errors.get('status', []) %}<p class="field-error" role="alert">{{ message }}</p>{% endfor %}</div>
+  </div>
+  <div class="actions">{{ form.submit() }}<a href="{{ url_for('equipment.detail', equipment_id=item.id) if item else url_for('equipment.index') }}">Hủy</a></div>
+</form>
+</section>
+{% endblock %}

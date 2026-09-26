@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Thiết bị · EquipmentDesk{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">DANH MỤC THIẾT BỊ</p><h1>Thiết bị</h1></div>
+  <a class="button" href="{{ url_for('equipment.create') }}">Thêm thiết bị</a>
+</div>
+<form class="search" method="get" action="{{ url_for('equipment.index') }}">
+  <label for="q">Tìm theo mã, tên, loại hoặc vị trí</label>
+  <div class="actions"><input id="q" type="search" name="q" value="{{ q }}" maxlength="200" placeholder="Ví dụ: laptop hoặc phòng 201">
+    <button type="submit">Tìm kiếm</button><a href="{{ url_for('equipment.index') }}">Xóa bộ lọc</a></div>
+</form>
+<p>{{ pagination.total }} thiết bị{% if q %} khớp với “{{ q }}”{% endif %}.</p>
+{% if pagination.items %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th scope="col">Mã thiết bị</th><th scope="col">Tên thiết bị</th><th scope="col">Loại</th><th scope="col">Trạng thái</th><th scope="col">Vị trí</th><th scope="col">Thao tác</th></tr></thead>
+  <tbody>{% for item in pagination.items %}
+    <tr><td><a href="{{ url_for('equipment.detail', equipment_id=item.id) }}">{{ item.code }}</a></td>
+      <td>{{ item.name }}</td><td>{{ item.category }}</td>
+      <td><span class="badge {{ item.status|lower }}">{{ status_labels[item.status] }}</span></td>
+      <td>{{ item.location or '—' }}</td>
+      <td><a href="{{ url_for('equipment.edit', equipment_id=item.id) }}" aria-label="Sửa {{ item.code }}">Sửa</a></td></tr>
+  {% endfor %}</tbody>
+</table>
+</div>
+{% else %}<section><h2>Không có thiết bị để hiển thị</h2><p>Thử từ khóa khác hoặc thêm thiết bị mới.</p></section>{% endif %}
+{% if pagination.pages > 1 %}
+<nav class="pagination" aria-label="Phân trang">
+  {% if pagination.has_prev %}<a href="{{ url_for('equipment.index', q=q, page=pagination.prev_num) }}">← Trang trước</a>{% endif %}
+  <span>Trang {{ pagination.page }} / {{ pagination.pages }}</span>
+  {% if pagination.has_next %}<a href="{{ url_for('equipment.index', q=q, page=pagination.next_num) }}">Trang sau →</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

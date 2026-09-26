@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Tạo phiếu mượn · EquipmentDesk{% endblock %}
+{% block content %}
+<a href="{{ url_for('loans.index') }}">← Danh sách phiếu mượn</a>
+<h1>Tạo phiếu mượn</h1>
+<p>Người tạo: <strong>{{ current_user.full_name }}</strong>. Chọn từ 1 đến 100 thiết bị và ghi tình trạng trước khi mượn cho từng thiết bị đã chọn.</p>
+{% include "loans/_errors.html" %}
+<form method="post">
+  {{ form.hidden_tag() }}
+  <section>
+    <div class="date-fields">
+      <div class="field">{{ form.loan_date.label }}{{ form.loan_date(type='date', required=true) }}</div>
+      <div class="field">{{ form.expected_return_date.label }}{{ form.expected_return_date(type='date', required=true) }}</div>
+    </div>
+    <div class="field">{{ form.note.label }}{{ form.note(maxlength=10000) }}</div>
+  </section>
+  <h2>Thiết bị sẵn sàng</h2>
+  {% if equipment %}
+  <div class="table-wrap"><table>
+    <thead><tr><th scope="col">Chọn</th><th scope="col">Thiết bị</th><th scope="col">Vị trí</th><th scope="col">Tình trạng trước khi mượn</th></tr></thead>
+    <tbody>{% for item in equipment %}<tr>
+      <td><input class="device-checkbox" type="checkbox" id="equipment-{{ item.id }}" name="equipment_ids" value="{{ item.id }}" {% if item.id|string in selected %}checked{% endif %} aria-label="Chọn {{ item.code }}"></td>
+      <td><label for="equipment-{{ item.id }}">{{ item.code }} · {{ item.name }}</label></td>
+      <td>{{ item.location or '—' }}</td>
+      <td><label class="sr-only" for="condition-{{ item.id }}">Tình trạng trước khi mượn {{ item.code }}</label>
+        <textarea id="condition-{{ item.id }}" name="condition_before_{{ item.id }}" maxlength="2000" rows="2" placeholder="Ví dụ: Hoạt động tốt, đủ phụ kiện">{{ request.form.get('condition_before_' ~ item.id, '') }}</textarea></td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  <p class="actions">{{ form.submit() }}<a href="{{ url_for('loans.index') }}">Hủy</a></p>
+  {% else %}<section><p>Hiện không có thiết bị sẵn sàng. Hãy kiểm tra <a href="{{ url_for('equipment.index') }}">danh sách thiết bị</a>.</p></section>{% endif %}
+</form>
+{% endblock %}

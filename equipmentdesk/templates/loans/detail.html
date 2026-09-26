@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ loan.loan_code }} · EquipmentDesk{% endblock %}
+{% block content %}
+<a href="{{ url_for('loans.index') }}">← Danh sách phiếu mượn</a>
+<h1>Chi tiết phiếu mượn</h1>
+<p class="loan-code">{{ loan.loan_code }}</p>
+{% include "loans/_errors.html" %}
+<section><dl>
+  <dt>Người tạo</dt><dd>{{ loan.user.full_name }} ({{ loan.user.username }})</dd>
+  <dt>Ngày mượn</dt><dd>{{ loan.loan_date.strftime('%d/%m/%Y') }}</dd>
+  <dt>Ngày hẹn trả</dt><dd>{{ loan.expected_return_date.strftime('%d/%m/%Y') }}</dd>
+  <dt>Trạng thái</dt><dd><span class="badge {{ 'returned' if loan.status == 'RETURNED' else 'borrowed' }}">{{ 'Đã trả' if loan.status == 'RETURNED' else 'Đang mượn' }}</span>
+    {% if loan.is_overdue %}<span class="badge overdue">Quá hạn</span>{% endif %}</dd>
+  <dt>Ngày trả thực tế</dt><dd>{{ loan.actual_return_date.strftime('%d/%m/%Y') if loan.actual_return_date else 'Chưa trả' }}</dd>
+  <dt>Ghi chú</dt><dd class="description">{{ loan.note or 'Không có ghi chú' }}</dd>
+</dl></section>
+<h2>Thiết bị trong phiếu</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th scope="col">Thiết bị</th><th scope="col">Tình trạng trước khi mượn</th><th scope="col">Tình trạng sau khi trả</th></tr></thead>
+  <tbody>{% for item in loan.items|sort(attribute='equipment_id') %}<tr>
+    <td><a href="{{ url_for('equipment.detail', equipment_id=item.equipment_id) }}">{{ item.equipment.code }} · {{ item.equipment.name }}</a></td>
+    <td class="description">{{ item.condition_before }}</td><td class="description">{{ item.condition_after or 'Chưa trả' }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+<section aria-labelledby="attachments-title">
+  <h2 id="attachments-title">Biên bản đính kèm</h2>
+  {% if loan.attachments %}
+  <ul>{% for attachment in loan.attachments|sort(attribute='created_at') %}
+    <li>{{ attachment.original_name }} · {{ attachment.size }} byte · {{ attachment.created_at.strftime('%d/%m/%Y %H:%M') }}
+      <a href="{{ url_for('attachments_api.download', attachment_id=attachment.id) }}" aria-label="Tải xuống {{ attachment.original_name }}">Tải xuống</a></li>
+  {% endfor %}</ul>
+  {% else %}<p>Chưa có biên bản đính kèm.</p>{% endif %}
+  <h3>Tải biên bản lên</h3>
+  <p>Chấp nhận PDF, PNG hoặc JPEG hợp lệ, tối đa 10 MB mỗi file.</p>
+  {% if upload_error %}<p class="notice error" role="alert">{{ upload_error }}</p>{% endif %}
+  {% for messages in upload_errors.values() %}{% for message in messages %}
+    <p class="field-error" role="alert">{{ message }}</p>
+  {% endfor %}{% endfor %}
+  <form method="post" enctype="multipart/form-data" action="{{ url_for('loans.upload_attachment', loan_id=loan.id) }}">
+    {{ upload_form.hidden_tag() }}
+    <div class="field">{{ upload_form.file.label }}{{ upload_form.file(accept='.pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg', required=true) }}</div>
+    {{ upload_form.submit() }}
+  </form>
+</section>
+{% if loan.status == 'BORROWED' %}
+<section>
+  <h2>Trả toàn bộ phiếu</h2>
+  <p>Ghi nhận tình trạng của tất cả thiết bị. Khi xác nhận, thiết bị sẽ chuyển về Sẵn sàng.</p>
+  <form method="post" action="{{ url_for('loans.return_all', loan_id=loan.id) }}">
+    {{ form.hidden_tag() }}
+    <div class="field">{{ form.actual_return_date.label }}{{ form.actual_return_date(type='date', required=true, min=loan.loan_date.isoformat()) }}</div>
+    {% for item in loan.items|sort(attribute='equipment_id') %}
+    <input type="hidden" name="equipment_ids" value="{{ item.equipment_id }}">
+    <div class="field"><label for="after-{{ item.equipment_id }}">Tình trạng sau khi trả {{ item.equipment.code }} · {{ item.equipment.name }}</label>
+      <textarea id="after-{{ item.equipment_id }}" name="condition_after_{{ item.equipment_id }}" maxlength="2000" required>{{ request.form.get('condition_after_' ~ item.equipment_id, '') }}</textarea></div>
+    {% endfor %}
+    {{ form.submit() }}
+  </form>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Phiếu mượn · EquipmentDesk{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">MƯỢN / TRẢ THIẾT BỊ</p><h1>Phiếu mượn</h1></div>
+  <a class="button" href="{{ url_for('loans.create') }}">Tạo phiếu mượn</a>
+</div>
+<p>{{ pagination.total }} phiếu. Phiếu đang mượn được đánh dấu quá hạn khi đã qua ngày hẹn trả.</p>
+{% if pagination.items %}
+<div class="table-wrap"><table>
+  <thead><tr><th scope="col">Mã phiếu</th><th scope="col">Người tạo</th><th scope="col">Ngày mượn</th><th scope="col">Hẹn trả</th><th scope="col">Thiết bị</th><th scope="col">Trạng thái</th></tr></thead>
+  <tbody>{% for loan in pagination.items %}<tr>
+    <td><a href="{{ url_for('loans.detail', loan_id=loan.id) }}">{{ loan.loan_code }}</a></td>
+    <td>{{ loan.user.full_name }}</td>
+    <td>{{ loan.loan_date.strftime('%d/%m/%Y') }}</td>
+    <td>{{ loan.expected_return_date.strftime('%d/%m/%Y') }}</td>
+    <td>{{ loan.items|length }}</td>
+    <td><span class="badge {{ 'returned' if loan.status == 'RETURNED' else 'borrowed' }}">{{ 'Đã trả' if loan.status == 'RETURNED' else 'Đang mượn' }}</span>
+      {% if loan.is_overdue %}<span class="badge overdue">Quá hạn</span>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<section><h2>Chưa có phiếu mượn</h2><p>Chọn các thiết bị sẵn sàng để tạo phiếu đầu tiên.</p></section>{% endif %}
+{% if pagination.pages > 1 %}<nav class="pagination" aria-label="Phân trang">
+  {% if pagination.has_prev %}<a href="{{ url_for('loans.index', page=pagination.prev_num) }}">← Trang trước</a>{% endif %}
+  <span>Trang {{ pagination.page }} / {{ pagination.pages }}</span>
+  {% if pagination.has_next %}<a href="{{ url_for('loans.index', page=pagination.next_num) }}">Trang sau →</a>{% endif %}
+</nav>{% endif %}
+{% endblock %}

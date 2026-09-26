@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Đăng nhập · EquipmentDesk{% endblock %}
+{% block content %}
+<section class="login-card">
+  <p class="eyebrow">QUẢN LÝ MƯỢN / TRẢ THIẾT BỊ</p>
+  <h1>Đăng nhập</h1>
+  <p>Sử dụng tài khoản demo để quản lý thiết bị.</p>
+  {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+  <form method="post" action="{{ url_for('auth.login') }}">
+    {{ form.hidden_tag() }}
+    {% for field in (form.username, form.password) %}
+      <div class="field">
+        {{ field.label }}
+        {{ field(required=true, autocomplete=('username' if field.name == 'username' else 'current-password'), maxlength=(80 if field.name == 'username' else 128)) }}
+        {% for message in field.errors %}<p class="field-error" role="alert">{{ message }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    {{ form.submit() }}
+  </form>
+</section>
+{% endblock %}

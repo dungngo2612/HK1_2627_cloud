@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ item.code }} · EquipmentDesk{% endblock %}
+{% block content %}
+<a href="{{ url_for('equipment.index') }}">← Danh sách thiết bị</a>
+<div class="page-heading">
+  <div><p class="eyebrow">{{ item.code }}</p><h1>{{ item.name }}</h1></div>
+  <a class="button" href="{{ url_for('equipment.edit', equipment_id=item.id) }}">Sửa thiết bị</a>
+</div>
+<section>
+  <dl>
+    <dt>Trạng thái</dt><dd><span class="badge {{ item.status|lower }}">{{ status_labels[item.status] }}</span></dd>
+    <dt>Loại thiết bị</dt><dd>{{ item.category }}</dd>
+    <dt>Vị trí</dt><dd>{{ item.location or 'Chưa có thông tin' }}</dd>
+    <dt>Mô tả</dt><dd class="description">{{ item.description or 'Chưa có mô tả' }}</dd>
+    <dt>Ngày tạo</dt><dd><time datetime="{{ item.created_at.isoformat() }}">{{ item.created_at.strftime('%d/%m/%Y %H:%M %z') }}</time></dd>
+    <dt>Cập nhật gần nhất</dt><dd><time datetime="{{ item.updated_at.isoformat() }}">{{ item.updated_at.strftime('%d/%m/%Y %H:%M %z') }}</time></dd>
+  </dl>
+</section>
+{% endblock %}

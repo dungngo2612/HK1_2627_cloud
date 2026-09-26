@@ -1,0 +1,2 @@
+{% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+{% if errors %}<ul class="field-error" role="alert">{% for messages in errors.values() %}{% for message in messages %}{% if message != error %}<li>{{ message }}</li>{% endif %}{% endfor %}{% endfor %}</ul>{% endif %}
