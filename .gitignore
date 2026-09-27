@@ -13,7 +13,3 @@ uploads/
 instance/
 .DS_Store
 *.log
-# Deployment inventory and evidence contain internal infrastructure details.
-docs/development.md
-docs/source-inventory.md
-docs/evidence/

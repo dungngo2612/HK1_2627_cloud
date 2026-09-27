@@ -1,0 +1,26 @@
+{
+  "vm": "equipmentdesk-vm",
+  "loan_id": 11,
+  "attachment_id": "c615fb35-9699-4542-8b27-b98a4c2a5031",
+  "uploaded_and_downloaded_sha256": "2701ffcfb1dfaa50e0122af7fd069e5357ba25d65bc8e7517ada9d608fb41b19",
+  "physical_file": "/srv/cloudrescue-data/uploads/c615fb35969945428b27b98a4c2a5031.pdf",
+  "pre_reboot": {
+    "health_live_http": 200,
+    "health_ready_http": 200,
+    "loan_status": "RETURNED",
+    "equipment_status": "AVAILABLE",
+    "seed_equipment_loans_attachments": [20, 10, 5],
+    "download_matches_upload_bytes": true,
+    "physical_file_matches_download_bytes": true
+  },
+  "post_reboot": {
+    "health_live_http": 200,
+    "health_ready_http": 200,
+    "loan_status": "RETURNED",
+    "equipment_status": "AVAILABLE",
+    "seed_equipment_loans_attachments": [20, 10, 5],
+    "download_matches_upload_bytes": true,
+    "physical_file_matches_download_bytes": true
+  },
+  "chrome_download_matches_upload_sha256": true
+}

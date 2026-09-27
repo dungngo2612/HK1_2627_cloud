@@ -1,0 +1,5 @@
+0001_initial_schema
+Ver Cluster       Port Status Owner    Data directory                               Log file
+16  equipmentdesk 5432 online postgres /srv/cloudrescue-data/postgres/equipmentdesk /var/log/postgresql/postgresql-16-equipmentdesk.log
+Python 3.12.3
+gunicorn (version 25.3.0)

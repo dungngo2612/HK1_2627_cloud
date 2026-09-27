@@ -1,0 +1,20 @@
+IDX BOOT ID                          FIRST ENTRY                 LAST ENTRY
+ -2 a0332cc0f320400297d00ecfdd94a7b6 Thu 2026-09-24 14:01:53 UTC Thu 2026-09-24 15:06:38 UTC
+ -1 62609a07e9e649b193151a56b1cf7cb5 Thu 2026-09-24 15:44:55 UTC Thu 2026-09-24 23:12:32 UTC
+  0 32d806437c4d4613bb8b785b256b0469 Thu 2026-09-24 23:15:33 UTC Thu 2026-09-24 23:25:56 UTC
+2026-09-24T23:18:34+00:00 equipmentdesk-vm systemd[1]: Starting postgresql@16-equipmentdesk.service - PostgreSQL Cluster 16-equipmentdesk...
+2026-09-24T23:19:37+00:00 equipmentdesk-vm systemd[1]: Started postgresql@16-equipmentdesk.service - PostgreSQL Cluster 16-equipmentdesk.
+2026-09-24T23:19:38+00:00 equipmentdesk-vm systemd[1]: Started equipmentdesk.service - EquipmentDesk Flask application.
+2026-09-24T23:20:00+00:00 equipmentdesk-vm gunicorn[900]: [2026-09-24 23:20:00 +0000] [900] [INFO] Starting gunicorn 25.3.0
+2026-09-24T23:20:00+00:00 equipmentdesk-vm gunicorn[900]: [2026-09-24 23:20:00 +0000] [900] [INFO] Listening at: http://127.0.0.1:8080 (900)
+2026-09-24T23:20:00+00:00 equipmentdesk-vm gunicorn[900]: [2026-09-24 23:20:00 +0000] [900] [INFO] Using worker: sync
+2026-09-24T23:20:00+00:00 equipmentdesk-vm gunicorn[930]: [2026-09-24 23:20:00 +0000] [930] [INFO] Booting worker with pid: 930
+2026-09-24T23:20:01+00:00 equipmentdesk-vm gunicorn[931]: [2026-09-24 23:20:00 +0000] [931] [INFO] Booting worker with pid: 931
+Thu Sep 24 23:26:00 UTC 2026
+2026-09-24 23:13:37
+/dev/vdb 44afe0d1-db81-4914-ba5f-04949a02bded /srv/cloudrescue-data
+enabled
+enabled
+active
+active
+/srv/cloudrescue-data/postgres/equipmentdesk
